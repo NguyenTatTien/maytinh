@@ -4,110 +4,228 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  _MyApp createState()=>_MyApp();
+}
+class _MyApp extends State<MyApp>{
+   // This widget is the root of your application.
+  List<String>Key1=["AC","+/-","%","/"];
+  List<String>Key2=["7","8","9","x"];
+  List<String>Key3=["4","5","6","-"];
+  List<String>Key4=["1","2","3","+"];
+  List<List>keys=[];
+  List<Color>color1=[Colors.green,Colors.green,Colors.green,Colors.orange];
+  List<Color>color2=[Colors.blue,Colors.blue,Colors.blue,Colors.orange];
+  List<Color>color3=[Colors.blue,Colors.blue,Colors.blue,Colors.orange];
+  List<Color>color4=[Colors.blue,Colors.blue,Colors.blue,Colors.orange];
+  List<List>colors=[];
+  String text_key="0";
+  String operator="";
+  bool ReStart=false;
+  @override
+  void initState(){
+    text_key="0";
+    operator="";
+    keys.add(Key1);
+    keys.add(Key2);
+    keys.add(Key3);
+    keys.add(Key4);
+    colors.add(color1);
+    colors.add(color2);
+    colors.add(color3);
+    colors.add(color4);
+    
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  void input(String key){
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+     if(ReStart==true){
+         text_key="0";
+          ReStart=false;
+     }
+     if(key!="="){
+            if(text_key=="0"){
+              if(key=="+"||key=="-"||key=="x"||key=="/"||key=="%"){
+                text_key+=key;
+                operator=key;
+                
+              }
+              else{
+                text_key=key;
+               
+              }
+        }
+         else{
+         if(key=="+"||key=="-"||key=="x"||key=="/"||key=="%"){
+              if(text_key.contains("+")||text_key.contains("-")||text_key.contains("x")||text_key.contains("/")||text_key.contains("%"))
+              {
+                  if(text_key[text_key.length-1]!='+'||text_key[text_key.length - 1]!='-'||text_key[text_key.length-1]!='x'||text_key[text_key.length - 1]!='/'||text_key[text_key.length-1]!='%'){
+                      calculate(key);
+
+                  }
+              }
+              else{
+                operator=key;
+                text_key+=key;
+              }
+            
+          }
+          else{
+                
+               text_key+=key;
+          }
+        
+      }
+     }
+     else{
+       calculate(key);
+     }
+     
+     
+    });
+     }
+  void calculate(String key){
+   
+    double soA=double.parse(text_key.substring(0,text_key.indexOf(operator)));
+    double soB=double.parse(text_key.substring(text_key.indexOf(operator)+1,text_key.length));
+     if(operator=="+"){
+         
+         text_key=(soA+soB).toString();
+         operator=key;
+        }
+        else if(operator=="-"){
+          text_key=(soA-soB).toString();
+           operator=key;
+        }
+        else if(operator=="x"){
+          text_key=(soA*soB).toString();
+           operator=key;
+        }
+        else if(operator=="/"){
+          if(soB==0){
+            text_key="Resulf is undefined";
+            ReStart==true;
+          }
+          else{
+             text_key=(soA/soB).toStringAsFixed(3);
+            operator=key;
+          }
+        }
+        else if(operator=="%"){
+            text_key=(soA%soB).toString();
+            operator=key;
+            
+        }
+        if(key!="="&&text_key!="Resulf is undefined"){
+            text_key+=key;
+            ReStart=false;
+        }
+        else{
+          ReStart=true;
+        }
+    setState(() {
+       text_key=text_key;
     });
   }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Center(child: Text("Calculator"),),backgroundColor: Colors.orange,),
+        body:Center(child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+         
+          Expanded(child: ConstrainedBox(constraints: BoxConstraints.expand(),child:  Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(child:Text(text_key,style:TextStyle(fontSize: 50),),margin: EdgeInsets.only(right: 10,bottom: 5),alignment: Alignment.bottomRight,)
+                  
+                ],
+          )),flex: 3,),
+          for(int i=0;i<4;i++)
+           Expanded(child: ConstrainedBox(constraints: BoxConstraints.expand(),child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+            for(int j=0;j<4;j++)
+                     
+                      Expanded(child: Container(
+                          height:double.infinity,
+                          margin: EdgeInsets.fromLTRB(10, 0, 10, 3),
+                          child: ElevatedButton(onPressed: () =>input(keys[i][j]),child:Text(keys[i][j]),style:ElevatedButton.styleFrom(
+                            shape:new CircleBorder(),
+                            elevation: 2.0,
+                             primary: colors[i][j],
+                          
+                         
+                          
+                          ),
+                          
+                        
+                      )),flex: 1,),
+                        
+
+                    
+                  ],
+                ),
+              )),flex:1),
+           Expanded(child: ConstrainedBox(constraints: BoxConstraints.expand(),child:Center(
+             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                  
+                   Expanded(child: Container(
+                       height:double.infinity,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 3),
+                      child: ElevatedButton(onPressed: () =>input("0"),child:Text("0"),style:ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(300.0)
+                      ),
+                      primary: Colors.blue
+                      ),
+                      
+                     
+                   )),flex: 2,),
+                   Expanded(child: Container(
+                         height:double.infinity,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 3),
+                      child: ElevatedButton(onPressed: () =>input("."),child:Text("."),style:ElevatedButton.styleFrom(
+                        shape:new CircleBorder(),
+                            elevation: 2.0,
+                             primary: Colors.blue,
+                      ),
+                      
+                     
+                   )),flex: 1,),
+                     Expanded(child: Container(
+                         height:double.infinity,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 3),
+                      child: ElevatedButton(onPressed: () =>input("="),child:Text("="),style:ElevatedButton.styleFrom(
+                        shape:new CircleBorder(),
+                        elevation: 2.0,
+                        primary: Colors.blue,
+                      
+                      
+                      ),
+                      
+                     
+                   )),flex: 1,),
+
+                
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+           )),flex: 1,)
           ],
-        ),
+        ),)
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    
+     
     );
-  }
+  
+
+
+}
 }
